@@ -24,6 +24,7 @@ public class ReviewService {
         if(reviewRepository.existsByBookIdAndUserId(review.getUser().getId(), review.getBook().getId())) {
             throw new RuntimeException("Review already exists!");
         }
+
         return reviewRepository.save(review);
     }
 
@@ -44,6 +45,7 @@ public class ReviewService {
         }
         review.setRating(rating);
         review.setComment(comment);
+
         return reviewRepository.save(review);
     }
 
