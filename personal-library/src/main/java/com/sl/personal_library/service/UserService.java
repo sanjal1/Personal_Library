@@ -7,6 +7,8 @@ import com.sl.personal_library.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -34,17 +36,18 @@ public class UserService {
     }
 
     //change profile, change password,change profile picture
-    public User changeProfile(Long id, String firstName, String lastName, String profilePicture) {
+    public User changeProfile(Long id, String firstName, String lastName, String email, String profilePicture) {
         User user = userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found"));
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setEmail(email);
         user.setProfilePicture(profilePicture);
 
         return userRepository.save(user);
     }
 
-    public User changePassword(String email, String newPassword, String oldPassword) {
-        User user = userRepository.findByEmail(email).orElseThrow(()->new RuntimeException("User not found"));
+    public User changePassword(Long id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found"));
         if(!PasswordService.checkPassword(oldPassword,user.getPassword())) {
             throw new RuntimeException("Old password is incorrect.");
         }
@@ -72,5 +75,7 @@ public class UserService {
     public long getNumberOfReviews(){
         return  reviewRepository.count();
     }
+
+    public List<User> findAllUsers() {return userRepository.findAll();}
 
 }
